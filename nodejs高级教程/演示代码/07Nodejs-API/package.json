@@ -1,0 +1,18 @@
+{
+  "name": "07nodejs-api",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
