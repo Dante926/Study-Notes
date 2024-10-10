@@ -1,13 +1,13 @@
 #! /usr/bin/env node
+// 项目入口文件
 const { program } = require('commander'); // 引入命令行参数解析模块
 
-program.option('-f --framwork <framwork>', '设置脚手架')
-program
-.command('create <project> [other...]')
-.alias('crt')
-.description('创建项目')
-.action((project, args) => {
-    // 命令行执行逻辑代码
-    console.log(project, args)
-})
+// 引入help模块
+const myhelp = require('../lib/core/help')
+myhelp(program)// 注册模块
+
+// 引入命令模块
+const mycommander = require('../lib/core/mycommander')
+mycommander(program)
+
 program.parse(process.argv)
