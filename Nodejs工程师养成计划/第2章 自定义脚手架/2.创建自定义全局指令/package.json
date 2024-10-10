@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "commander": "^12.1.0",
+    "download-git-repo": "^3.0.2",
     "inquirer": "^8.2.6"
   }
 }
