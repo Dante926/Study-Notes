@@ -1,6 +1,7 @@
 const download = require('download-git-repo')
 const config = require('../../config')
 const ora = require('ora')
+const chalk = require('chalk')
 
 const downloadFun = function (url, project) {
     const spinner = ora().start()
@@ -15,10 +16,10 @@ const downloadFun = function (url, project) {
             spinner.fail('下载失败' + err)
         } else {
             spinner.succeed('Success!')
-            console.log('Done! you run:');
-            console.log('cd ' + project);
-            console.log('npm install');
-            console.log('npm run dev');
+            console.log(chalk.blue.bold('Done!'), chalk.bold('you run:'));
+            console.log(chalk.red.bold('cd ') + project);
+            console.log(chalk.green.bold('npm') + ' install');
+            console.log(chalk.green.bold('npm') + ' run dev');
         }
     })
 }
