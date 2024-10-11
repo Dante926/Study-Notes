@@ -13,7 +13,7 @@ const downloadFun = function (url, project) {
             console.log(err); 
         */
         if (err) {
-            spinner.fail('下载失败' + err)
+            spinner.fail('下载失败 ' + err)
         } else {
             spinner.succeed('Success!')
             console.log(chalk.blue.bold('Done!'), chalk.bold('you run:'));
