@@ -45,6 +45,40 @@ app.post('/', async (req, res) => {
     }
 })
 
+app.put('/:id', async (req, res) => {
+    /*     
+        console.log(req.params);
+        console.log(req.body); 
+    */
+    try {
+        const userinfo = await db.getDb()
+        const UserId = Number.parseInt(req.params.id)
+        const user = userinfo.users.find(item => item.id === UserId)
+        if (!user) {
+            res.status(403).json({
+                error: '用户不存在'
+            })
+        } else {
+            user.username = req.body.username;
+            user.age = req.body.age;
+            console.log(userinfo);
+
+            const w = await db.serveDb(userinfo)
+            if (!w) {
+                console.log('更新成功');
+
+                res.status(201).json({
+                    msg: '修改成功'
+                })
+            } else {
+                console.log('写入错误');
+            }
+        }
+    } catch {
+
+    }
+})
+
 app.listen(3000, () => {
     console.log('server is running at http://127.0.0.1:3000');
 })
