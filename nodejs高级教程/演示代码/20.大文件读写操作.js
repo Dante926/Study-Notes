@@ -23,7 +23,6 @@ let buf = Buffer.alloc(12)// 创建一个12字节的buffer
 buf = Buffer.from('百色学院')// 创建一个有内容的buffer
 fs.open('b.txt', 'w', (err, wfd) => {
     fs.write(wfd, buf, 0, 12, 0, (err, writeBytes, buffer) => {
-
         /* 
             参数1：写入的文件（于文件描述符决定）
             参数2：要写入的内容
