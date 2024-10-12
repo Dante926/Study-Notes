@@ -1,0 +1,25 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "admin",
+            "age": 18
+        },
+        {
+            "id": 2,
+            "username": "admin2",
+            "age": 19
+        },
+        {
+            "username": "list",
+            "age": 12,
+            "id": 3
+        },
+        {
+            "username": "list",
+            "age": 12,
+            "id": 4
+        }
+    ],
+    "vide0": []
+}
