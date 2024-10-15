@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const md5 = require('../util/md5')
+const baseModel = require('./baseModel')
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -6,7 +9,8 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        set: val => md5(val)// set可以设置一个函数，最后函数返回的结果就是当前对应字段为数据库存储的值
     },
     email: {
         type: String,
@@ -23,14 +27,7 @@ const userSchema = new mongoose.Schema({
     Image: {
         type: String,
     },
-    createTime: {
-        type: Date,
-        default: Date.now()
-    },
-    updateTime: {
-        type: Date,
-        default: Date.now()
-    }
+    ...baseModel
 })
 
 module.exports = userSchema

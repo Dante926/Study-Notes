@@ -5,8 +5,11 @@ const userHandler = {
     register: async (req, res) => {
         console.log(req.body);
         const userModel = new User(req.body)
-        const cb = await userModel.save()
-        res.status(201).json(cb)
+        const cb = (await userModel.save()).toJSON()
+        delete cb.password
+        res.status(201).json({
+            cb
+        })
     },
 }
 
