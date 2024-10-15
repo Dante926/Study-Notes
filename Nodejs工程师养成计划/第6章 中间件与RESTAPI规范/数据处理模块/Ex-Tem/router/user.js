@@ -5,6 +5,6 @@ const router = express.Router()
 // 处理模块路由
 const userHandler = require('../router_handler/user')
 
-router.get('/getuserlist', userHandler.getuserlist)
+router.post('/register', userHandler.register)
 
 module.exports = router

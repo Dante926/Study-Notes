@@ -9,11 +9,8 @@ app.use(bodyParser.json());
 
 // 注册挂载路由
 
-// const indexRouter = require('./router/index');
-// app.use('/api', indexRouter);
-
-const userRouter = require('./router/user');
-app.use('/api/user', userRouter);
+const indexRouter = require('./router/index');
+app.use('/api', indexRouter);
 
 
 const PORT = process.env.PORT || 3000
