@@ -8,7 +8,6 @@ app.use(bodyParser.urlencoded({ extended: false }));// 只能解析 application/
 app.use(bodyParser.json());
 
 // 注册挂载路由
-
 const indexRouter = require('./router/index');
 app.use('/api/v1', (req, res, next) => {
   console.log('请求路径', req.originalUrl);
