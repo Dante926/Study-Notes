@@ -10,7 +10,10 @@ app.use(bodyParser.json());
 // 注册挂载路由
 
 const indexRouter = require('./router/index');
-app.use('/api', indexRouter);
+app.use('/api/v1', (req, res, next) => {
+  console.log('请求路径', req.originalUrl);
+  next();
+}, indexRouter);
 
 
 const PORT = process.env.PORT || 3000

@@ -6,6 +6,6 @@ const validator = require('../middleware/validator/userValidator')
 // 处理模块路由
 const userHandler = require('../router_handler/user')
 
-router.post('/register',validator.register,userHandler.register)
+router.post('/registers',validator.register,userHandler.register)
 
 module.exports = router
