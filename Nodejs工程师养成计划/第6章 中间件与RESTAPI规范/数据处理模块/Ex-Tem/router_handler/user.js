@@ -11,6 +11,18 @@ const userHandler = {
             cb
         })
     },
+
+    login: async (req, res) => {
+        const dbBack = await User.findOne(req.body)
+        res.status(200).json(dbBack)
+    },
+
+    list: async (req, res) => {
+        console.log('list');
+        res.send({
+            msg:'list'
+        })
+    },
 }
 
 module.exports = userHandler 

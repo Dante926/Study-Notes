@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        set: val => md5(val)// set可以设置一个函数，最后函数返回的结果就是当前对应字段为数据库存储的值
+        set: val => md5(val),// set可以设置一个函数，最后函数返回的结果就是当前对应字段为数据库存储的值
+        select: false // select: false表示在查询的时候，该字段不会被返回
     },
     email: {
         type: String,
