@@ -6,10 +6,10 @@ const userHandler = {
     register: async (req, res) => {
         console.log(req.body);
         const userModel = new User(req.body)
-        const cb = (await userModel.save()).toJSON()
-        delete cb.password
+        const user = (await userModel.save()).toJSON()
+        delete user.password // 因为model里只能剔除select的字段，这里使用的是save。所以不受model里规则的影响
         res.status(201).json({
-            cb
+            user
         })
     },
 

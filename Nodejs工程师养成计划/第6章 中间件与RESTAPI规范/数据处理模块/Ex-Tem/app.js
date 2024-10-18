@@ -6,13 +6,12 @@ app.use(cors());
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));// 只能解析 application/x-www-form-urlencoded 格式的表单数据
 app.use(bodyParser.json());
+const morgan = require('morgan');
+app.use(morgan('dev'));
 
 // 注册挂载路由
 const indexRouter = require('./router/index');
-app.use('/api/v1', (req, res, next) => {
-  console.log('请求路径', req.originalUrl);
-  next();
-}, indexRouter);
+app.use('/api/v1', indexRouter);
 
 
 const PORT = process.env.PORT || 3000
