@@ -30,7 +30,8 @@ const userHandler = {
     },
 
     list: async (req, res) => {
-        console.log('list');
+        const { userinfo } = req.user
+        console.log(userinfo);
         res.send({
             msg: 'list'
         })

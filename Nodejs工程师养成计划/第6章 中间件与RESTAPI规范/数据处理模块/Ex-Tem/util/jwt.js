@@ -11,16 +11,14 @@ module.exports = {
     },
 
     verifyToken: async (req, res, next) => {// 把其当作中间件去处理
-        console.log(req.headers);
         var token = req.headers.authorization;
-        console.log(token);
         token = token ? token.split('Bearer ')[1] : null
         if (!token) {
             return res.status(402).json({ error: '请传入token' });
         }
         try {
             let userinfo = jwt.verify(token, secret)
-            console.log(userinfo);
+            req.user = userinfo
             next();
         } catch (err) {
             res.status('402').json({ error: 'token失效' })
