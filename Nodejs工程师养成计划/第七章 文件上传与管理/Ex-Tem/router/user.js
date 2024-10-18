@@ -15,9 +15,6 @@ router
     .post('/logins', validator.login, userHandler.login)
     .get('/lists', verifyToken, userHandler.list)
     .put('/', verifyToken, validator.update, userHandler.update)
-    .post('/headimgs',(req,res,next)=>{
-        console.log(req.path);
-        next()
-    }, verifyToken,upload.single('headimg'), userHandler.headimg)
+    .post('/headimgs', verifyToken, upload.single('headimg'), userHandler.headimg)
 
 module.exports = router
