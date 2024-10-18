@@ -1,6 +1,7 @@
 // 个人信息更新处理函数
 const { User } = require('../model/index')
 const { createToken } = require('../util/jwt')
+const fs = require('fs')
 
 const userHandler = {
     register: async (req, res) => {
@@ -38,9 +39,32 @@ const userHandler = {
 
     update: async (req, res) => {
         const { userinfo } = req.user
-        const updateData = await User.findByIdAndUpdate(userinfo._id, req.body,{new:true})// {new:true}返回的是新数据
-        res.status(202).json({user:updateData})
+        const updateData = await User.findByIdAndUpdate(userinfo._id, req.body, { new: true })// {new:true}返回的是新数据
+        res.status(202).json({ user: updateData })
     },
+
+    headimg: async (req, res) => {
+        try {
+            const fileArr = req.file.originalname.split('.');
+            const filetype = fileArr[fileArr.length - 1];
+
+            // req.file.filename是上传之后自动生成的哈希值，用这个哈希值来做文件名
+            await fs.rename(
+                './public/headimgs/' + req.file.filename,
+                './public/headimgs/' + req.file.filename + '.' + filetype,
+                (err) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send({ msg: 'File rename failed' });
+                    }
+                    res.send({ filepath: req.file.filename + '.' + filetype });
+                }
+            );
+        } catch (error) {
+            res.status(500).send({ msg: 'An error occurred' });
+        }
+    }
+
 }
 
 module.exports = userHandler 

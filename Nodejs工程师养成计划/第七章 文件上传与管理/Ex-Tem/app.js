@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({ extended: false }));// 只能解析 application/
 app.use(bodyParser.json());
 const morgan = require('morgan');
 app.use(morgan('dev'));
+app.use(express.static('public/headimgs'));// 开放静态资源
 
 // 注册挂载路由
 const indexRouter = require('./router/index');
