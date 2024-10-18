@@ -13,5 +13,7 @@ router
     .post('/registers', validator.register, userHandler.register)
     .post('/logins', validator.login, userHandler.login)
     .get('/lists', verifyToken, userHandler.list)
+    .put('/', verifyToken, validator.update, userHandler.update)
+
 
 module.exports = router

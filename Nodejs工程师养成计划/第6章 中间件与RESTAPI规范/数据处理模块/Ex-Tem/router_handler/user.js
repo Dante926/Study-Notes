@@ -31,10 +31,13 @@ const userHandler = {
 
     list: async (req, res) => {
         const { userinfo } = req.user
-        console.log(userinfo);
         res.send({
             msg: 'list'
         })
+    },
+
+    update: async (req, res) => {
+        res.send(req.body)
     },
 }
 
