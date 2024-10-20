@@ -4,6 +4,6 @@ const videoHandler = require('../router_handler/video')
 
 
 router
-    .post('/credentials', videoHandler.credential)
+    .get('/credentials', videoHandler.credential)
 
 module.exports = router
