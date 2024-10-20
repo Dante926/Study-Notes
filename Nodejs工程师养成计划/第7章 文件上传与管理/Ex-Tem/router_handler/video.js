@@ -1,6 +1,5 @@
 const RPCClient = require('@alicloud/pop-core').RPCClient;
 require('dotenv').config();
-
 // 初始化账号Client
 const client = new RPCClient({
     accessKeyId: process.env.ALIYUN_ACCESS_KEY_ID,
@@ -8,7 +7,6 @@ const client = new RPCClient({
     endpoint: 'https://vod.cn-shanghai.aliyuncs.com', // 替换为你所在区域的 endpoint
     apiVersion: '2017-03-21' // VOD API 版本
 });
-
 // 获取上传凭证
 async function getUploadVideoCredentials() {
     const action = 'CreateUploadVideo'; // VOD API 操作名称
@@ -26,10 +24,25 @@ async function getUploadVideoCredentials() {
     }
 }
 
+const { Video } = require('../model/index');
+
 const videoHandler = {
     credential: async (req, res) => {
         const result = await getUploadVideoCredentials();
         res.send(result);
+    },
+
+    createvideo: async (req, res) => {
+        var body = req.body
+        body.user = req.user.userinfo._id
+
+        const videoModel = new Video(body)
+        try {
+            const dbback = await videoModel.save()
+            res.status(201).json({ dbback })
+        } catch (error) {
+            res.status(500).json({ err: error })
+        }
     }
 }
 

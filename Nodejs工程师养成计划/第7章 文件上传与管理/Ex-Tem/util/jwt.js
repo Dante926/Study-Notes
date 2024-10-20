@@ -6,7 +6,7 @@ module.exports = {
         return await jwt.sign(
             { userinfo },
             secret,
-            { expiresIn: '1h' }
+            { expiresIn: '24h' }
         );
     },
 
