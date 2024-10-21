@@ -16,5 +16,8 @@ router
     .get('/lists', verifyToken(), userHandler.list)
     .put('/', verifyToken(), validator.update, userHandler.update)
     .post('/headimgs', verifyToken(), upload.single('headimg'), userHandler.headimg)
+    .get('/subscribes/:userId', verifyToken(), userHandler.subscribe)
+    .get('/unsubscribes/:userId', verifyToken(), userHandler.unsubscribe)
+
 
 module.exports = router

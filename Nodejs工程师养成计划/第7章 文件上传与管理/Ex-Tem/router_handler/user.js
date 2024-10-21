@@ -1,5 +1,5 @@
 // 个人信息更新处理函数
-const { User } = require('../model/index')
+const { User, Subscribe } = require('../model/index')
 const { createToken } = require('../util/jwt')
 const fs = require('fs')
 
@@ -63,8 +63,65 @@ const userHandler = {
         } catch (error) {
             res.status(500).send({ msg: 'An error occurred' });
         }
-    }
+    },
 
+    subscribe: async (req, res) => {
+        // 1.传入要关注的Id(不能关注自己)
+        const userId = req.user.userinfo._id // 当前用户Id
+        const channelId = req.params.userId // 要关注的id
+
+        if (userId == channelId) {
+            return res.status(403).json({ err: '不能关注自己' })
+        }
+
+        const record = await Subscribe.findOne({
+            user: userId,
+            channel: channelId
+        })
+        if (!record) {
+            await new Subscribe({
+                user: userId,
+                channel: channelId
+            }).save()
+
+            const user = await User.findById(channelId)
+            user.subscribeCount++
+            await user.save()
+            return res.status(200).json({ msg: '关注成功' })
+
+        } else {
+            res.status(401).json({ err: '已经订阅了此频道' })
+        }
+    },
+
+    unsubscribe: async (req, res) => {
+        try {
+            const userId = req.user.userinfo._id;
+            const channelId = req.params.userId;
+
+            if (userId == channelId) {
+                return res.status(403).json({ err: '不能取消关注自己' });
+            }
+
+            const record = await Subscribe.findOne({ user: userId, channel: channelId });
+
+            if (record) {
+                // 使用 deleteOne 方法删除记录
+                await Subscribe.deleteOne({ user: userId, channel: channelId });
+
+                const user = await User.findById(channelId);
+                user.subscribeCount--;
+                await user.save();
+
+                return res.status(200).json({ msg: '取消关注' });
+            } else {
+                return res.status(403).json({ err: '没有订阅此频道' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ err: '操作失败,内部服务器错误' });
+        }
+    }
 }
 
 module.exports = userHandler 
