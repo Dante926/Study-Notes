@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const baseModel = require('./baseModel')
 
-const videoSchema = new mongoose.Schema({
+const videoModel = new mongoose.Schema({
     title: {// 视频标题
         type: String,
         required: true
@@ -27,7 +27,15 @@ const videoSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    likeCount: {// 点赞数
+        type: Number,
+        default: 0
+    },
+    dislikeCount: {// 点踩数
+        type: Number,
+        default: 0
+    },
     ...baseModel
 })
 
-module.exports = videoSchema
+module.exports = videoModel

@@ -24,7 +24,7 @@ async function getUploadVideoCredentials() {
     }
 }
 
-const { Video, Videocomment } = require('../model/index');
+const { Video, Videocomment, Videolike } = require('../model/index');
 
 const videoHandler = {
     credential: async (req, res) => {
@@ -80,6 +80,68 @@ const videoHandler = {
         videoInfo.commentCount++
         await videoInfo.save()
         res.status(201).json(content)
+    },
+
+    likevideo: async (req, res) => {
+        let islike = true;
+        const userId = req.user.userinfo._id;
+        const videoId = req.params.videoId;
+
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(404).json({ err: '视频不存在' });
+        }
+
+        let doc = await Videolike.findOne({ user: userId, video: videoId });
+        if (doc && doc.like === 1) { // User has already liked
+            islike = false;
+            await doc.deleteOne(); // Use deleteOne instead of remove
+        } else if (doc && doc.like === -1) {
+            doc.like = 1;
+            await doc.save();
+        } else {
+            await new Videolike({ user: userId, video: videoId, like: 1 }).save();
+        }
+
+        video.likeCount = await Videolike.countDocuments({ video: videoId, like: 1 });
+        video.dislikeCount = await Videolike.countDocuments({ video: videoId, like: -1 });
+        await video.save();
+
+        res.status(200).json({
+            ...video.toJSON(),
+            islike,
+        });
+    },
+
+    dislikevideo: async (req, res) => {
+        let isdislike = true;
+        const userId = req.user.userinfo._id;
+        const videoId = req.params.videoId;
+
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(404).json({ err: '视频不存在' });
+        }
+
+        let doc = await Videolike.findOne({ user: userId, video: videoId });
+        if (doc && doc.like === -1) {
+            await doc.deleteOne();
+            isdislike = false;
+        } else if (doc && doc.like === 1) {
+            doc.like = -1;
+            await doc.save();
+        } else {
+            await new Videolike({ user: userId, video: videoId, like: -1 }).save();
+        }
+
+        video.likeCount = await Videolike.countDocuments({ video: videoId, like: 1 });
+        video.dislikeCount = await Videolike.countDocuments({ video: videoId, like: -1 });
+        await video.save();
+
+        res.status(200).json({
+            ...video.toJSON(),
+            isdislike,
+        });
     },
 }
 

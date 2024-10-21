@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const md5 = require('../util/md5')
 const baseModel = require('./baseModel')
 
-const userSchema = new mongoose.Schema({
+const userModel = new mongoose.Schema({
     username: {
         type: String,
         required: true
@@ -43,4 +43,4 @@ const userSchema = new mongoose.Schema({
     ...baseModel
 })
 
-module.exports = userSchema
+module.exports = userModel

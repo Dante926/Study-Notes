@@ -1,18 +1,23 @@
 const mongoose = require('mongoose')
 const baseModel = require('./baseModel')
 
-const subscribeModel= new mongoose.Schema({
-    user: { // 关注的用户
+const videolikeModel = new mongoose.Schema({
+    user: {
         type: mongoose.ObjectId,
         required: true,
         ref: 'User'
     },
-    channel: { // 被关注的用户
+    video: {
         type: mongoose.ObjectId,
         required: true,
-        ref: 'User'// 会去查询User集合
+        ref: 'Video'
+    },
+    like: {
+        type: Number,
+        enum: [1, -1],
+        required: true
     },
     ...baseModel
 })
 
-module.exports = subscribeModel
+module.exports = videolikeModel
