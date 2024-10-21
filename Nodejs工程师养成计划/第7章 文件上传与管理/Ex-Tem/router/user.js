@@ -18,6 +18,6 @@ router
     .post('/headimgs', verifyToken(), upload.single('headimg'), userHandler.headimg)
     .get('/subscribes/:userId', verifyToken(), userHandler.subscribe)
     .get('/unsubscribes/:userId', verifyToken(), userHandler.unsubscribe)
-
+    .get('/thechannels/:userId', verifyToken(false), userHandler.thechannel)// 获取频道信息
 
 module.exports = router

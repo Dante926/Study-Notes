@@ -2,6 +2,7 @@
 const { User, Subscribe } = require('../model/index')
 const { createToken } = require('../util/jwt')
 const fs = require('fs')
+const lodash = require('lodash')
 
 const userHandler = {
     register: async (req, res) => {
@@ -121,7 +122,30 @@ const userHandler = {
             console.error(error);
             return res.status(500).json({ err: '操作失败,内部服务器错误' });
         }
-    }
+    },
+
+    thechannel: async (req, res) => {
+        var isSubscribe = false
+        if (req.user) {// 如果是登录状态
+            const record = await Subscribe.findOne({
+                user: req.user.userinfo._id,
+                channel: req.params.userId
+            })
+            if (record) {
+                isSubscribe = true
+            }
+        }
+
+        const user = await User.findById(req.params.userId)
+        user.isSubscribe = isSubscribe //使用Lodash第三方包处理
+        res.status(200).json({
+            ...lodash.pick(
+                user,
+                ['_id','username', 'image', 'subscribeCount','cover','channeldes']
+            ),
+            isSubscribe
+        })
+    },
 }
 
 module.exports = userHandler 
