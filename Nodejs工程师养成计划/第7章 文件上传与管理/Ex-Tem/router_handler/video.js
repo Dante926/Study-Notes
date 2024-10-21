@@ -24,7 +24,7 @@ async function getUploadVideoCredentials() {
     }
 }
 
-const { Video, Videocomment, Videolike } = require('../model/index');
+const { Video, Videocomment, Videolike, Subscribe } = require('../model/index');
 
 const videoHandler = {
     credential: async (req, res) => {
@@ -56,13 +56,32 @@ const videoHandler = {
         res.status(200).json({ videolist, videoCount })
     },
 
-    video: async (req, res) => {
+    video: async (req, res) => {// 获取视频详情信息
         const { videoId } = req.params
         console.log(typeof (videoId), ':', videoId);
 
-        const videoinfo = await Video
+        var videoinfo = await Video
             .findById(videoId)
             .populate('user', '_id username cover')
+
+        videoinfo = videoinfo.toJSON()
+        videoinfo.islike = false
+        videoinfo.isdislike = false
+        videoinfo.isSubscribe = false
+
+        if (req.user.userinfo) {
+            const userId = req.user.userinfo._id
+            console.log(userId);
+            if (await Videolike.findOne({ user: userId, video: videoId, like: 1 })) {
+                videoinfo.islike = true
+            }
+            if (await Videolike.findOne({ user: userId, video: videoId, like: -1 })) {
+                videoinfo.isdislike = true
+            }
+            if (await Subscribe.findOne({ user: userId, channel: videoinfo.user._id })) {
+                videoinfo.isSubscribe = true
+            }
+        }
         res.status(200).json(videoinfo)
     },
 
@@ -142,6 +161,16 @@ const videoHandler = {
             ...video.toJSON(),
             isdislike,
         });
+    },
+
+    likelist: async (req, res) => {
+        const { pageNum = 1, pageSize = 10 } = req.params
+        var likelist = await Videolike
+            .find({ user: req.user.userinfo._id, like: 1 })
+            .skip((pageNum - 1) * pageSize)
+            .limit(pageSize)
+            .populate('video', '_id title vodvideoId user')
+        res.status(200).json(likelist)
     },
 }
 
