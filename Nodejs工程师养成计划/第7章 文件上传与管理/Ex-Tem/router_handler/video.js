@@ -43,6 +43,17 @@ const videoHandler = {
         } catch (error) {
             res.status(500).json({ err: error })
         }
+    },
+
+    videolist: async (req, res) => {
+        let { pageNum = 1, pageSize = 10 } = req.body
+        const videolist = await Video.find()
+            .skip((pageNum - 1) * pageSize)
+            .limit(pageSize)
+            .sort({ createTime: -1 })
+            .populate('user')
+        const videoCount = await Video.countDocuments()
+        res.status(200).json({ videolist, videoCount })
     }
 }
 

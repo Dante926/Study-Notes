@@ -8,5 +8,6 @@ const { videoValidator } = require('../middleware/validator/videoValidator')
 router
     .get('/credentials', verifyToken, videoHandler.credential)
     .post('/createvideos', verifyToken, videoValidator, videoHandler.createvideo)
+    .get('/videolists', verifyToken, videoHandler.videolist)
 
 module.exports = router
