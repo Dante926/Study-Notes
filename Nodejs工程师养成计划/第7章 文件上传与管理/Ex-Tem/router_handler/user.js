@@ -179,7 +179,7 @@ const userHandler = {
             ])// 过滤不需要的信息
         })
         res.status(200).json(fanList)
-    }
+    },
 }
 
 module.exports = userHandler 

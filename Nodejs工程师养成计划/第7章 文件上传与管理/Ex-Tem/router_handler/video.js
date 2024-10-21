@@ -24,7 +24,7 @@ async function getUploadVideoCredentials() {
     }
 }
 
-const { Video } = require('../model/index');
+const { Video, Videocomment } = require('../model/index');
 
 const videoHandler = {
     credential: async (req, res) => {
@@ -64,6 +64,22 @@ const videoHandler = {
             .findById(videoId)
             .populate('user', '_id username cover')
         res.status(200).json(videoinfo)
+    },
+
+    comment: async (req, res) => {
+        const { videoId } = req.params
+        const videoInfo = await Video.findById(videoId)
+        if (!videoInfo) {
+            return res.status(404).json({ err: '视频不存在' })
+        }
+        const content = await new Videocomment({
+            video: videoId,
+            content: req.body.content,
+            user: req.user.userinfo._id
+        }).save()
+        videoInfo.commentCount++
+        await videoInfo.save()
+        res.status(201).json(content)
     },
 }
 
