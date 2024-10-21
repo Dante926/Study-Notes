@@ -13,8 +13,8 @@ const upload = multer({ dest: 'public/headimgs' })
 router
     .post('/registers', validator.register, userHandler.register)
     .post('/logins', validator.login, userHandler.login)
-    .get('/lists', verifyToken, userHandler.list)
-    .put('/', verifyToken, validator.update, userHandler.update)
-    .post('/headimgs', verifyToken, upload.single('headimg'), userHandler.headimg)
+    .get('/lists', verifyToken(), userHandler.list)
+    .put('/', verifyToken(), validator.update, userHandler.update)
+    .post('/headimgs', verifyToken(), upload.single('headimg'), userHandler.headimg)
 
 module.exports = router

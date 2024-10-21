@@ -51,10 +51,20 @@ const videoHandler = {
             .skip((pageNum - 1) * pageSize)
             .limit(pageSize)
             .sort({ createTime: -1 })
-            .populate('user')
+            .populate('user', '_id username cover')
         const videoCount = await Video.countDocuments()
         res.status(200).json({ videolist, videoCount })
-    }
+    },
+
+    video: async (req, res) => {
+        const { videoId } = req.params
+        console.log(typeof (videoId), ':', videoId);
+
+        const videoinfo = await Video
+            .findById(videoId)
+            .populate('user', '_id username cover')
+        res.status(200).json(videoinfo)
+    },
 }
 
 module.exports = videoHandler;
