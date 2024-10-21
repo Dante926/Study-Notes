@@ -19,5 +19,6 @@ router
     .get('/subscribes/:userId', verifyToken(), userHandler.subscribe)
     .get('/unsubscribes/:userId', verifyToken(), userHandler.unsubscribe)
     .get('/thechannels/:userId', verifyToken(false), userHandler.thechannel)// 获取频道信息
-
+    .get('/channellists/:userId', userHandler.channellist)// 获取该用户的关注列表
+    .get('/fanlists/:userId',userHandler.fanlist)
 module.exports = router

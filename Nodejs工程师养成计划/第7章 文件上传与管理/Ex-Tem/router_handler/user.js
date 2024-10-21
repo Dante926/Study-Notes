@@ -141,11 +141,45 @@ const userHandler = {
         res.status(200).json({
             ...lodash.pick(
                 user,
-                ['_id','username', 'image', 'subscribeCount','cover','channeldes']
+                ['_id', 'username', 'image', 'subscribeCount', 'cover', 'channeldes']
             ),
             isSubscribe
         })
     },
+
+    channellist: async (req, res) => {
+        let subscribeList = await Subscribe.find({
+            user: req.params.userId
+        }).populate('channel')// Subscribe中的channel与User表进行了关联
+        subscribeList = subscribeList.map(item => {
+            return lodash.pick(item.channel, [
+                '_id',
+                'username',
+                'image',
+                'subscribeCount',
+                'cover',
+                'channeldes',
+            ])// 过滤不需要的信息
+        })
+        res.status(200).json(subscribeList)
+    },
+
+    fanlist: async (req, res) => {
+        let fanList = await Subscribe.find({
+            channel: req.params.userId
+        }).populate('user')
+        fanList = fanList.map(item => {
+            return lodash.pick(item.user, [
+                '_id',
+                'username',
+                'image',
+                'subscribeCount',
+                'cover',
+                'channeldes',
+            ])// 过滤不需要的信息
+        })
+        res.status(200).json(fanList)
+    }
 }
 
 module.exports = userHandler 
