@@ -23,12 +23,8 @@ module.exports = {
                     res.status('402').json({ error: 'token失效' })
                 }
             } else if (required) {
-                console.log(required);
-
                 return res.status(402).json({ error: '请传入token' });
             } else {
-                console.log(required);
-
                 next();
             }
 

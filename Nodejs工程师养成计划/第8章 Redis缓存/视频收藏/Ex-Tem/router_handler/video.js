@@ -26,6 +26,16 @@ async function getUploadVideoCredentials() {
 
 const { Video, Videocomment, Videolike, Subscribe, Collect } = require('../model/index');
 
+// 视频热门推荐机制
+/* 
+    观看 +1 
+    点赞 +2 
+    评论 +2 
+    收藏 +3
+*/
+const { hotInc } = require('../model/redis/redishotsinc')
+
+
 const videoHandler = {
     credential: async (req, res) => {
         const result = await getUploadVideoCredentials();
@@ -58,20 +68,17 @@ const videoHandler = {
 
     video: async (req, res) => {// 获取视频详情信息
         const { videoId } = req.params
-        console.log(typeof (videoId), ':', videoId);
 
         var videoinfo = await Video
             .findById(videoId)
             .populate('user', '_id username cover')
-
         videoinfo = videoinfo.toJSON()
         videoinfo.islike = false
         videoinfo.isdislike = false
         videoinfo.isSubscribe = false
 
-        if (req.user.userinfo) {
+        if (req.user && req.user.userinfo) {
             const userId = req.user.userinfo._id
-            console.log(userId);
             if (await Videolike.findOne({ user: userId, video: videoId, like: 1 })) {
                 videoinfo.islike = true
             }
@@ -82,6 +89,7 @@ const videoHandler = {
                 videoinfo.isSubscribe = true
             }
         }
+        await hotInc(videoId, 1);// 只要获取了这个视频的信息就相当于观看了一次视频
         res.status(200).json(videoinfo)
     },
 
@@ -97,6 +105,7 @@ const videoHandler = {
             user: req.user.userinfo._id
         }).save()
         videoInfo.commentCount++
+        await hotInc(videoId, 2);
         await videoInfo.save()
         res.status(201).json(content)
     },
@@ -118,8 +127,10 @@ const videoHandler = {
         } else if (doc && doc.like === -1) {
             doc.like = 1;
             await doc.save();
+            await hotInc(videoId, 2);
         } else {
             await new Videolike({ user: userId, video: videoId, like: 1 }).save();
+            await hotInc(videoId, 2);
         }
 
         video.likeCount = await Videolike.countDocuments({ video: videoId, like: 1 });
@@ -186,6 +197,12 @@ const videoHandler = {
             return res.status(403).json({ msg: '视频已收藏' })
         }
         const creatcollect = await new Collect({ user: userId, video: videoId }).save()
+
+        // 如果收藏成功，给被收藏的视频增加热度
+        if (creatcollect) {
+            const inc = await hotInc(videoId, 3)
+        }
+
         res.status(201).json(creatcollect)
     }
 }
