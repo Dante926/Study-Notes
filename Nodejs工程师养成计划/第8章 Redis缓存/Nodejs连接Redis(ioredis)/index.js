@@ -10,4 +10,4 @@ redis.on('error', (err) => {
     console.error('Redis错误:', err);
 });
 
-redis.set('mykeysa', 'myvalue')
+redis.set('mykey', 'myvalue')
