@@ -15,5 +15,6 @@ router
     .get('/dislikevideos/:videoId', verifyToken(), videoHandler.dislikevideo)
     .get('/likelists', verifyToken(), videoHandler.likelist)
     .get('/collects/:videoId', verifyToken(), videoHandler.collect)
+    .get('/hotlists/:topnum', videoHandler.hotlist)
 
 module.exports = router

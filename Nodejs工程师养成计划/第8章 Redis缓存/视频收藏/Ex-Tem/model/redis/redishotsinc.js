@@ -13,6 +13,18 @@ const redishotsinc = {
         return inc;
     },
 
+    topHots: async (num) => {// 获取热度前num的视频
+        var sort = await redis.zrevrange('videohots', 0, - 1, 'WITHSCORES')
+        var sortArr = sort.slice(0, num * 2)
+        var obj = {}
+        for (let i = 0; i < sortArr.length; i++) {
+            if (i % 2 == 0) {
+                obj[sortArr[i]] = sortArr[i + 1]
+            }
+        }
+        return obj;
+    }
+
 }
 
 module.exports = redishotsinc

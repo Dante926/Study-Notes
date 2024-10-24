@@ -33,7 +33,7 @@ const { Video, Videocomment, Videolike, Subscribe, Collect } = require('../model
     评论 +2 
     收藏 +3
 */
-const { hotInc } = require('../model/redis/redishotsinc')
+const { hotInc, topHots } = require('../model/redis/redishotsinc')
 
 
 const videoHandler = {
@@ -204,7 +204,13 @@ const videoHandler = {
         }
 
         res.status(201).json(creatcollect)
-    }
+    },
+
+    hotlist: async (req, res) => {
+        const { topnum } = req.params
+        var tops = await topHots(topnum)
+        res.status(200).json(tops)
+    },
 }
 
 module.exports = videoHandler;
