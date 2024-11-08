@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+/* In your CSS */
+.avatar {
+  border-radius: 50%;
+}
