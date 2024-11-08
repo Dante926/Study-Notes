@@ -1,0 +1,5 @@
+/* App.css */
+.small {
+    /* border: 2px solid red; 举个例子，给图片加个红色边框 */
+    border-radius: 10px;
+}
