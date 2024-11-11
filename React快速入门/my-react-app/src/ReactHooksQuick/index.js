@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useReducer, useState } from "react";
+import { useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useState, memo } from "react";
 import React, { useRef, forwardRef } from 'react';
 
 // Reducer 统一管理状态的操作方式(和useState时一样的,看个人喜好选择)
@@ -65,6 +65,92 @@ function MyComponent() {
 }) */
 
 // useEffect 副作用函数hooks
+/* 
+    useEffect
+*/
+
+// useMemo
+/* 
+    是一种用来进行数据缓存的钩子,
+    为什么会有这个钩子？ 是因为,假设我们这个函数组件在父组件中被引入,并且传递数据给当前组件进行复杂计算,
+    只要我们当前这个组件(子组件)重新被调用就会重新进行一次复杂计算,并渲染。但是,
+    如果父组件中有其他方法使得整个页面要重新渲染，那么就会导致该 子组件也会重新渲染,渲染之前又要重新执行一次复杂运算。
+*/
+// function DoSomeMath({ value }) {
+//     console.log('DoSomeMath重新执行了');
+//     let result = 0;
+//     for (let i = 0; i < 100000; i++) {
+//         result += value * 2
+//     }
+
+//     // s使用useMemo 记录value变化，如果有变化才重新执行
+//     /* const result = useMemo(() => {
+//         console.log('DoSomeMath重新执行了');
+//         let result = 0;
+//         for (let i = 0; i < 100000; i++) {
+//             result += value * 2
+//         }
+//         return result;
+//     }, [value]) */
+
+//     return (
+//         <div>
+//             <p>输入内容:{value}</p>
+//             <p>经过复杂运算得到:{result}</p>
+//         </div>
+//     )
+// }
+
+// function ShowDSM({ }) {
+//     const [count, setCount] = useState(0)
+//     const [inputValue, setinputValue] = useState(5)
+//     return (
+//         <div>
+//             <p>count的值为:{count}</p>
+//             <br />
+//             <button
+//                 onClick={() => { setCount(count + 1) }}
+//             >点击更新</button>
+//             <br />
+//             <input type="number"
+//                 value={inputValue}
+//                 onChange={(e) => setinputValue(parseInt(e.target.value))}
+//             />
+//             <DoSomeMath value={inputValue}></DoSomeMath>
+//         </div>
+//     )
+// }
+
+// useCallBack
+const Button = memo(function ({ onClick }) {
+    console.log('Button渲染了');
+    return (
+        <>
+            <button onClick={onClick}>子组件</button>
+        </>
+    )
+})
+
+
+function ShowUCB() {
+    const [count, setCount] = useState(0);
+    const handleClick = useCallback(() => {
+        console.log('点击按钮');
+    }, [])
+
+    const handleUpdate = () => {
+        setCount(count + 1)
+    }
+
+    return (
+        <div>
+            <p>Count:{count}</p>
+            <button onClick={handleUpdate}>点击</button>
+            <br />
+            <Button onClick={handleClick} />
+        </div>
+    )
+}
 
 function App() {
     // useRef 获取子组件? 
@@ -84,7 +170,11 @@ function App() {
 
     return (
         <>
-            {/* useMemo */}
+            {/* useCallBack 函数缓存 */}
+            <ShowUCB />
+
+            {/* useMemo 数据缓存*/}
+            {/* <ShowDSM></ShowDSM> */}
 
             {/* useEffect */}
             {/* <button onClick={handEffect}>{count}</button> */}
